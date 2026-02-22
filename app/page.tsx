@@ -4,13 +4,16 @@ import React, { useState, useRef, useCallback } from "react";
 import ImageUploader from "./components/ImageUploader";
 import PaletteUploader from "./components/PaletteUploader";
 import PixelSizeSlider from "./components/PixelSizeSlider";
+import ColorAlgorithmSelector from "./components/ColorAlgorithmSelector";
 import PixelArtCanvas, { PixelArtCanvasHandle } from "./components/PixelArtCanvas";
 import { Palette } from "./lib/paletteParser";
+import { ColorAlgorithm } from "./lib/pixelArtConverter";
 
 export default function Home() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [palette, setPalette] = useState<Palette | null>(null);
   const [pixelSize, setPixelSize] = useState(8);
+  const [algorithm, setAlgorithm] = useState<ColorAlgorithm>("euclidean");
   const canvasRef = useRef<PixelArtCanvasHandle>(null);
 
   const handleImageLoad = useCallback((dataUrl: string) => {
@@ -72,6 +75,14 @@ export default function Home() {
               <PixelSizeSlider value={pixelSize} onChange={setPixelSize} />
             </div>
 
+            {/* Color algorithm */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                4 · Colour Algorithm
+              </h2>
+              <ColorAlgorithmSelector value={algorithm} onChange={setAlgorithm} />
+            </div>
+
             {/* Download button */}
             {imageSrc && (
               <button
@@ -112,6 +123,7 @@ export default function Home() {
                     imageSrc={imageSrc}
                     pixelSize={pixelSize}
                     palette={palette?.colors ?? null}
+                    algorithm={algorithm}
                   />
                 </div>
               ) : (

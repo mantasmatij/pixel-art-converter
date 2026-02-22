@@ -2,12 +2,13 @@
 
 import React, { useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from "react";
 import { Color } from "../lib/paletteParser";
-import { convertToPixelArt } from "../lib/pixelArtConverter";
+import { convertToPixelArt, ColorAlgorithm } from "../lib/pixelArtConverter";
 
 interface PixelArtCanvasProps {
   imageSrc: string;
   pixelSize: number;
   palette: Color[] | null;
+  algorithm: ColorAlgorithm;
   onReady?: () => void;
 }
 
@@ -17,7 +18,7 @@ export interface PixelArtCanvasHandle {
 }
 
 const PixelArtCanvas = forwardRef<PixelArtCanvasHandle, PixelArtCanvasProps>(
-  ({ imageSrc, pixelSize, palette, onReady }, ref) => {
+  ({ imageSrc, pixelSize, palette, algorithm, onReady }, ref) => {
     const sourceCanvasRef = useRef<HTMLCanvasElement>(null);
     const outputCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -25,9 +26,9 @@ const PixelArtCanvas = forwardRef<PixelArtCanvasHandle, PixelArtCanvasProps>(
       const source = sourceCanvasRef.current;
       const output = outputCanvasRef.current;
       if (!source || !output) return;
-      convertToPixelArt(source, output, pixelSize, palette);
+      convertToPixelArt(source, output, pixelSize, palette, algorithm);
       onReady?.();
-    }, [pixelSize, palette, onReady]);
+    }, [pixelSize, palette, algorithm, onReady]);
 
     // Load image into source canvas
     useEffect(() => {

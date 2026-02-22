@@ -5,6 +5,7 @@ import ImageUploader from "./components/ImageUploader";
 import PaletteUploader from "./components/PaletteUploader";
 import PixelSizeSlider from "./components/PixelSizeSlider";
 import ColorAlgorithmSelector from "./components/ColorAlgorithmSelector";
+import ImageAdjustments, { ImageAdjustmentValues } from "./components/ImageAdjustments";
 import PixelArtCanvas, { PixelArtCanvasHandle } from "./components/PixelArtCanvas";
 import { Palette } from "./lib/paletteParser";
 import { ColorAlgorithm } from "./lib/pixelArtConverter";
@@ -14,6 +15,11 @@ export default function Home() {
   const [palette, setPalette] = useState<Palette | null>(null);
   const [pixelSize, setPixelSize] = useState(8);
   const [algorithm, setAlgorithm] = useState<ColorAlgorithm>("euclidean");
+  const [adjustments, setAdjustments] = useState<ImageAdjustmentValues>({
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
+  });
   const canvasRef = useRef<PixelArtCanvasHandle>(null);
 
   const handleImageLoad = useCallback((dataUrl: string) => {
@@ -83,6 +89,14 @@ export default function Home() {
               <ColorAlgorithmSelector value={algorithm} onChange={setAlgorithm} />
             </div>
 
+            {/* Image adjustments */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                5 · Adjustments
+              </h2>
+              <ImageAdjustments values={adjustments} onChange={setAdjustments} />
+            </div>
+
             {/* Download button */}
             {imageSrc && (
               <button
@@ -124,6 +138,7 @@ export default function Home() {
                     pixelSize={pixelSize}
                     palette={palette?.colors ?? null}
                     algorithm={algorithm}
+                    adjustments={adjustments}
                   />
                 </div>
               ) : (
